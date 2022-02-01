@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.7)
+
+project(CeresLog)
+
+set(CMAKE_CXX_STANDARD 20)
+set(PROJECT_NAME CeresLog)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(OUTPUT_DIR "${CMAKE_CURRENT_LIST_DIR}/bin/")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
+
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-DDEBUG)
+endif()
+
+if(UNIX)
+    add_definitions(-DPLATFORM_LINUX)
+elseif(WIN32)
+    add_definitions(-DPLATFORM_WINDOWS)
+endif()
+
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.h"
+							   "${CMAKE_CURRENT_LIST_DIR}/src/*.hpp")
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
+
+add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
+
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+  set(BUILD_TESTS_DEFAULT ON)
+else()
+  message(STATUS "Running as subproject!")
+  set(BUILD_TESTS_DEFAULT OFF)
+endif()
+option(BUILD_TESTS "Build Testing Project" ${BUILD_TESTS_DEFAULT})
+if(BUILD_TESTS)
+  message(STATUS "Building Tests...")
+  add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/thirdparty/catch")
+  add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/")
+else()
+  message(STATUS "Tests disabled..")
+endif()
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/src/Logging.h;${CMAKE_CURRENT_LIST_DIR}/src/Loggable.h")
+
+install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
+
