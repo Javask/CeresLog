@@ -1,5 +1,5 @@
 #include "Discovery.h"
-#ifdef PLATFORM_WINDOWS
+#ifdef CERESLOG_PLATFORM_WINDOWS
 #include <Windows.h>
 
 #include <vector>
@@ -11,7 +11,7 @@
 #endif
 
 std::filesystem::path GetExecutablePath() {
-#ifdef PLATFORM_WINDOWS
+#ifdef CERESLOG_PLATFORM_WINDOWS
   std::vector<char> FileName = std::vector<char>(128);
   while (GetModuleFileNameA(NULL, FileName.data(), (DWORD)FileName.size()) ==
          (DWORD)FileName.size()) {

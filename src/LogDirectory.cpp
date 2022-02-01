@@ -59,7 +59,7 @@ auto LogDirectory::getSystemLogDir() -> std::filesystem::path {
 std::string LogDirectory::getLogFileName() {
   time_t Time = time(nullptr);
   struct tm Now = {};
-#ifndef PLATFORM_WINDOWS
+#ifndef CERESLOG_PLATFORM_WINDOWS
   localtime_r(&Time, &Now);
 #else
   localtime_s(&Now, &Time);

@@ -5,7 +5,7 @@ Logger::Logger(std::shared_ptr<ILoggerBackend> backend) : backend_(backend) {}
 void Logger::log(const std::string& message) {
   time_t Time = time(nullptr);
   struct tm Now = {};
-#ifndef PLATFORM_WINDOWS
+#ifndef CERESLOG_PLATFORM_WINDOWS
   localtime_r(&Time, &Now);
 #else
   localtime_s(&Now, &Time);

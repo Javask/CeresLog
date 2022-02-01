@@ -1,5 +1,5 @@
 #pragma once
-#include "../src/Loggable.h"
+#include "../include/CeresLog/Loggable.h"
 
 class LoggableTest : public Loggable {
  public:
