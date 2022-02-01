@@ -17,12 +17,12 @@ Loggable::Loggable(std::string Name)
     : name(Name), id(IntToHex((uintptr_t)this)) {}
 void Loggable::changeName(std::string NewName) { name = NewName; }
 void Loggable::debugUnformatted(std::string Message) const {
-#ifdef DEBUG
+#ifdef CERESLOG_DEBUG
   if (auto Logger = LoggerFactory::createLogger()) Logger->write(Message);
 #endif
 }
 void Loggable::debug(std::string Message) const {
-#ifdef DEBUG
+#ifdef CERESLOG_DEBUG
   if (auto Logger = LoggerFactory::createLogger())
     Logger->log("[DEBUG][" + id + "][" + name + "] " + Message + "\n");
 #endif

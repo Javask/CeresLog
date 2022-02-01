@@ -19,7 +19,7 @@ class Logging {
 
 #define Info(A) Logging::log(std::string("[Info]") + A);
 
-#ifdef DEBUG
+#ifndef CERESLOG_DEBUG
 #define Debug(A)                                          \
   Logging::log(std::string("[Debug][") + __FILE__ + ":" + \
                std::to_string(__LINE__) + "]" + A);

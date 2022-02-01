@@ -6,7 +6,7 @@
 
 LoggableTest::LoggableTest() : Loggable("LoggableTest") {}
 
-#ifdef DEBUG
+#ifdef CERESLOG_DEBUG
 TEST_CASE_METHOD(LoggableTest, "Loggable logs correctly",
                  "[logging][loggable]") {
   auto backend = LoggerTestBackend::getTestBackend();
