@@ -3,48 +3,44 @@ cmake_minimum_required(VERSION 3.7)
 project(CeresLog)
 
 set(CMAKE_CXX_STANDARD 20)
-set(PROJECT_NAME CeresLog)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(OUTPUT_DIR "${CMAKE_CURRENT_LIST_DIR}/bin/")
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIR}" CACHE STRING "" FORCE)
-
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions(-DDEBUG)
+    add_definitions(-DCERESLOG_DEBUG)
 endif()
 
 if(UNIX)
-    add_definitions(-DPLATFORM_LINUX)
+    add_definitions(-DCERESLOG_PLATFORM_LINUX)
 elseif(WIN32)
-    add_definitions(-DPLATFORM_WINDOWS)
+    add_definitions(-DCERESLOG_PLATFORM_WINDOWS)
 endif()
 
-file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.h"
+file(GLOB_RECURSE CERESLOG_HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.h"
 							   "${CMAKE_CURRENT_LIST_DIR}/src/*.hpp")
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
+file(GLOB_RECURSE CERESLOG_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 
-add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${HEADER_FILES})
+set(CeresLog_INDLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/include")
+file(GLOB_RECURSE CERESLOG_INCLUDE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/include/*.h")
+
+
+add_library(CeresLog STATIC ${CERESLOG_SOURCE_FILES} ${CERESLOG_HEADER_FILES})
+target_include_directories(CeresLog INTERFACE "${CMAKE_CURRENT_LIST_DIR}/include")
+add_library(CeresLog::CeresLog ALIAS CeresLog)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-  set(BUILD_TESTS_DEFAULT ON)
+  set(CERESLOG_BUILD_TESTS_DEFAULT ON)
 else()
-  message(STATUS "Running as subproject!")
-  set(BUILD_TESTS_DEFAULT OFF)
+  message(STATUS "CeresLog running as subproject!")
+  set(CERESLOG_BUILD_TESTS_DEFAULT OFF)
 endif()
-option(BUILD_TESTS "Build Testing Project" ${BUILD_TESTS_DEFAULT})
-if(BUILD_TESTS)
-  message(STATUS "Building Tests...")
+option(CERESLOG_BUILD_TESTS "Build CeresLog Testing Project" ${BUILD_TESTS_DEFAULT})
+if(CERESLOG_BUILD_TESTS)
+  message(STATUS "Building CeresLog tests...")
   add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/thirdparty/catch")
   add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/")
 else()
-  message(STATUS "Tests disabled..")
+  message(STATUS "CeresLog-Tests disabled..")
 endif()
-set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_LIST_DIR}/src/Logging.h;${CMAKE_CURRENT_LIST_DIR}/src/Loggable.h")
-
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
 
