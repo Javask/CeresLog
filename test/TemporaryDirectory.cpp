@@ -23,9 +23,7 @@ const fs::path TemporaryDirectory::createTempDir() {
 }
 
 TemporaryDirectory::~TemporaryDirectory() {
-  std::error_code ec = std::error_code();
-  remove_all(path_, ec);
-  REQUIRE(!ec);
+  remove_all(path_);
 }
 
  std::filesystem::path TemporaryDirectory::createTempFile() {

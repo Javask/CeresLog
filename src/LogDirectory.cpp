@@ -3,31 +3,44 @@
 
 #include <map>
 #include <fstream>
+#include <iostream>
 #include <ostream>
 
 namespace fs = std::filesystem;
 
-const std::string LogDirectory::LogFileExtension = ".log";
-
-LogDirectory::LogDirectory() : LogDirectory(getSystemLogDir()) {}
-
-LogDirectory::LogDirectory(const std::filesystem::path& path) {
-  path_ = path;
+LogDirectory::LogDirectory(const std::filesystem::path& path,
+                           const std::string& extension, int fileLimit)
+    : path_(path), extension(extension), fileLimit(fileLimit) {
+  if (!fs::exists(path)) {
+    if (!fs::create_directories(path)) {
+      std::cerr << "Failed to create logging directory "
+                << path.generic_string() << std::endl;
+      abort();
+    }
+  } else {
+    if (!fs::is_directory(path)) {
+      std::cerr << "Logging directory path already exists as non directory: "
+                << path.generic_string() << std::endl;
+      abort();
+    }
+  }
   enforceFileLimit();
 }
 
 void LogDirectory::enforceFileLimit() {
+  if (fileLimit <= 0) return;
+
   std::map<fs::file_time_type, fs::path> FilenameMap;
   for (auto& LogFile : fs::directory_iterator(path_)) {
     auto LWT = fs::last_write_time(LogFile);
-    if (LogFile.path().extension().generic_string() == LogFileExtension) {
+    if (LogFile.path().extension().generic_string() == extension) {
       FilenameMap.insert(std::make_pair(LWT, LogFile.path().generic_string()));
     }
   }
   size_t Counter = 0;
   size_t Max = FilenameMap.size();
-  if (Max > MaxLogFileCount) {
-    size_t ToGo = Max - MaxLogFileCount;
+  if (Max > fileLimit) {
+    size_t ToGo = Max - fileLimit;
     for (const auto& LogFileKey : FilenameMap) {
       if (Counter == ToGo) {
         break;
@@ -39,7 +52,7 @@ void LogDirectory::enforceFileLimit() {
 }
 
 auto LogDirectory::getSystemLogDir() -> std::filesystem::path {
-  auto ExecPath = GetExecutablePath();
+  auto ExecPath = Discovery::getExecutablePath();
   auto LogDir = ExecPath.parent_path().parent_path();
   LogDir.append("log");
   if (!fs::is_directory(LogDir)) {
@@ -72,17 +85,9 @@ std::string LogDirectory::getLogFileName() {
   Filename += std::to_string(Now.tm_hour) + "_";
   Filename += std::to_string(Now.tm_min) + "_";
   Filename += std::to_string(Now.tm_sec);
-  return Filename+LogFileExtension;
+  return Filename+extension;
 }
 
-std::unique_ptr<LogDirectory> LogDirectory::create() {
-  return std::unique_ptr<LogDirectory>(new LogDirectory());
-}
-
-std::unique_ptr<LogDirectory> LogDirectory::create(
-    const std::filesystem::path& path) {
-  return std::unique_ptr<LogDirectory>(new LogDirectory(path));
-}
 
 const std::filesystem::path LogDirectory::createLogFile() {
   auto outPath = fs::path(path_);
