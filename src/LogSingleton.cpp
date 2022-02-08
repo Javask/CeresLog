@@ -27,7 +27,10 @@ void LogSingleton::setCustomBackend(std::shared_ptr<ILoggerBackend> backend_) {
 void LogSingleton::setLogToConsole(bool logToConsole) {
   auto inst = LogSingleton::Get();
   inst->logToConsole = logToConsole;
-
+  auto Lock = std::unique_lock<std::mutex>(inst->backend_mutex);
+  if (logToConsole && !inst->consoleBackend_) {
+    inst->consoleBackend_ = std::make_unique<LoggerConsoleBackend>();
+  }
 }
 
 void LogSingleton::deactivateLogToDir(bool reset) {
