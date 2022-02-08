@@ -1,6 +1,5 @@
 out
 /.vs
-/cmake
 /bin
 /.clangd
 compile_commands.json
