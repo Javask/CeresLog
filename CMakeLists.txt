@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
 project(CeresLog VERSION 1.0.0 LANGUAGES CXX)
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DCERESLOG_DEBUG)
@@ -26,6 +25,9 @@ target_include_directories(CeresLog
 )
 
 add_library(CeresLog::CeresLog ALIAS CeresLog)
-add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/")
 
+option(CERESLOG_BUILD_TESTS "Build CeresLog Tests" ON)
+if(CERESLOG_BUILD_TESTS)
+  add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/")
+endif()
 
