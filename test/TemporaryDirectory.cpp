@@ -1,7 +1,7 @@
 #include "TemporaryDirectory.h"
 #include "RandomString.h"
 #include <string>
-#include <catch2/catch.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 #include <fstream>
 #include <cstring>
 
@@ -22,26 +22,23 @@ const fs::path TemporaryDirectory::createTempDir() {
   return dir;
 }
 
-TemporaryDirectory::~TemporaryDirectory() {
-  remove_all(path_);
-}
+TemporaryDirectory::~TemporaryDirectory() { remove_all(path_); }
 
- std::filesystem::path TemporaryDirectory::createTempFile() {
+std::filesystem::path TemporaryDirectory::createTempFile() {
   auto outPath = fs::path(path_).append(generateRandomString(8) + extension_);
-   auto stream = std::ofstream(outPath);
+  auto stream = std::ofstream(outPath);
   stream.close();
   return outPath;
- }
+}
 
- std::filesystem::path TemporaryDirectory::createNewFileInDir(
-     std::string name) {
-   auto outPath = fs::path(path_).append(name + extension_);
-   auto stream = std::ofstream(outPath);
-   stream.close();
-   return outPath;
- }
+std::filesystem::path TemporaryDirectory::createNewFileInDir(std::string name) {
+  auto outPath = fs::path(path_).append(name + extension_);
+  auto stream = std::ofstream(outPath);
+  stream.close();
+  return outPath;
+}
 
- std::filesystem::path TemporaryDirectory::getPath() const { return path_; }
+std::filesystem::path TemporaryDirectory::getPath() const { return path_; }
 
 TEST_CASE("Temporary Directory created", "[utility][temporarydir]") {
   {

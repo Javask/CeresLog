@@ -1,7 +1,7 @@
 #include "RandomString.h"
 #include <random>
 #include <algorithm>
-#include <catch2/catch.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 auto generateRandomString(const std::size_t len) -> std::string {
   static constexpr auto chars =
