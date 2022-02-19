@@ -25,7 +25,7 @@ std::filesystem::path Discovery::getExecutablePath() {
 #ifdef CERESLOG_PLATFORM_WINDOWS
   //Use Windows API to find Current file
   std::vector<char> FileName = std::vector<char>(128);
-  while (GetModuleFileNameA(NULL, FileName.data(), (DWORD)FileName.size()) ==
+  while (GetModuleFileNameA(nullptr, FileName.data(), (DWORD)FileName.size()) ==
          (DWORD)FileName.size()) {
     if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) {
       std::cerr << "Could not get filename!";
@@ -33,7 +33,7 @@ std::filesystem::path Discovery::getExecutablePath() {
     }
     FileName.resize(FileName.size() + 128);
   }
-  return std::filesystem::path(FileName.data());
+  return {FileName.data()};
 #else
   // Use Linux proc directory to find Current file
   // TODO Implement other OSes when targeted

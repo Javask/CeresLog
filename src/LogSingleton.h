@@ -13,7 +13,7 @@ class LogSingleton :public Singleton<LogSingleton>{
   friend class Destroyer<LogSingleton>;
  protected:
   LogSingleton() = default;
-  ~LogSingleton() = default;
+  ~LogSingleton() override = default;
 
  public:
   static void flush();
@@ -32,7 +32,6 @@ class LogSingleton :public Singleton<LogSingleton>{
   void log_(const std::string& message);
   void write_(const std::string& message);
   std::mutex backend_mutex;
-  bool initialized = false;
   std::unique_ptr <LogDirectory> dir = nullptr;
   std::shared_ptr<ILoggerBackend> customBackend_ = nullptr;
   std::atomic_bool logToFile = false, logToConsole = false;

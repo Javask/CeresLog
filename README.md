@@ -1,12 +1,12 @@
 # CeresLog 
-Simple spin-off of my shitty log code i keep rewriting so i stop doing that.\
+Simple spin-off of my shitty log code I keep rewriting, so I stop doing that.\
 Uses the [CPM package manager](https://github.com/cpm-cmake/CPM.cmake) for testing.
 
 ## CMake options
 To disable automatic build of test executable use CMake option CERESLOG_BUILD_TESTS.
 
 ## Configuration
-By default CeresLog will not log to anywhere.\
+By default, CeresLog will not log to anywhere.\
 To enable logging to console simply set Logging::setLogToConsole to true.\
 To enable file logging, use Logging::activateLogToDir and its overloads.\
 If no arguments are provided, will create a folder called "log" in the directory of the executable.\

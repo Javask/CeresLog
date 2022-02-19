@@ -1,4 +1,6 @@
 #include "LogSingleton.h"
+
+#include <utility>
 #include "Discovery.h"
 
 void LogSingleton::flush_() {
@@ -21,7 +23,7 @@ void LogSingleton::write(const std::string& message) {
 void LogSingleton::setCustomBackend(std::shared_ptr<ILoggerBackend> backend_) {
   auto inst = LogSingleton::Get();
   auto Lock = std::unique_lock<std::mutex>(inst->backend_mutex);
-  inst->customBackend_ = backend_;
+  inst->customBackend_ = std::move(backend_);
 }
 
 void LogSingleton::setLogToConsole(bool logToConsole) {
@@ -47,8 +49,9 @@ void LogSingleton::activateLogToDir() {
   auto Lock = std::unique_lock<std::mutex>(inst->backend_mutex);
   inst->logToFile = true;
   if (!inst->dir) {
-    inst->dir = std::make_unique<LogDirectory>(LogDirectory::getSystemLogDir(),
-                                               inst->defaultExtension, inst->defaultLimit);
+    auto systemLogDir = LogDirectory::getSystemLogDir();
+    inst->dir = std::make_unique<LogDirectory>(systemLogDir,
+                                               std::string(inst->defaultExtension), inst->defaultLimit);
     inst->fileBackend_ = nullptr;
   }
   if (!inst->fileBackend_) {

@@ -7,8 +7,8 @@
 
 class LoggerFileBackend : public ILoggerBackend {
  public:
-  LoggerFileBackend(const std::filesystem::path& file);
-  ~LoggerFileBackend();
+  explicit LoggerFileBackend(const std::filesystem::path& file);
+  ~LoggerFileBackend() override;
   LoggerFileBackend(LoggerFileBackend& other) = delete;
   LoggerFileBackend& operator=(LoggerFileBackend& other) = delete;
   void write(const std::string& message) override;

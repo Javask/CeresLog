@@ -1,5 +1,4 @@
 #include "LoggerFileBackend.h"
-#include <cassert>
 #include <iostream>
 #include "LogDirectory.h"
 
@@ -14,7 +13,7 @@ LoggerFileBackend::LoggerFileBackend(const std::filesystem::path& file) {
 
 void LoggerFileBackend::write(const std::string& message) {
   std::unique_lock<std::mutex> Lock(lock_);
-  if (file_.is_open()) file_.write(message.c_str(),message.size());
+  if (file_.is_open()) file_.write(message.c_str(),(std::streamsize)message.size());
 }
 
 void LoggerFileBackend::flush() { file_.flush(); }

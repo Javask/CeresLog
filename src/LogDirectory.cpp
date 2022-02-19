@@ -8,9 +8,9 @@
 
 namespace fs = std::filesystem;
 
-LogDirectory::LogDirectory(const std::filesystem::path& path,
-                           const std::string& extension, int fileLimit)
-    : path_(path), extension(extension), fileLimit(fileLimit) {
+LogDirectory::LogDirectory(std::filesystem::path& path,
+                           std::string extension, int fileLimit)
+    : path_(path), extension(std::move(extension)), fileLimit(fileLimit) {
   if (!fs::exists(path)) {
     if (!fs::create_directories(path)) {
       std::cerr << "Failed to create logging directory "
@@ -89,7 +89,7 @@ std::string LogDirectory::getLogFileName() {
 }
 
 
-const std::filesystem::path LogDirectory::createLogFile() {
+std::filesystem::path LogDirectory::createLogFile() {
   auto outPath = fs::path(path_);
   outPath.append(getLogFileName());
   auto temp = std::ofstream(outPath);

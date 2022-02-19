@@ -35,7 +35,7 @@ class Logging {
   /// <param name="val">if true will log to console</param>
   static void setLogToConsole(bool val);
   /// <summary>
-  /// Activates logging to standard directory, if directory was overriden will reactivate existing file log
+  /// Activates logging to standard directory, if directory was overwritten will reactivate existing file log
   /// </summary>
   static void activateLogToDir();
   /// <summary>
@@ -43,7 +43,7 @@ class Logging {
   /// Will create a new Log file.
   /// </summary>
   /// <param name="path">path of the directory to log to</param>
-  /// <param name="logFileLimit">Number of files with extension fileExtension allowes in directory, if 0 will not enforce</param>
+  /// <param name="logFileLimit">Number of files with extension fileExtension allows in directory, if 0 will not enforce</param>
   /// <param name="fileExtension">Extension of file to create/delete</param>
   static void activateLogToDir(const std::filesystem::path& path,
                                 int logFileLimit,
@@ -60,18 +60,18 @@ class Logging {
   static void flush();
 };
 
-#define Fatal(A) Logging::fatal(std::string("[Fatal]") + A); 
+#define Fatal(A) Logging::fatal(std::string("[Fatal]") + (A))
 
-#define Error(A) Logging::log(std::string("[Error]") + A);
+#define Error(A) Logging::log(std::string("[Error]") + (A))
 
-#define Warn(A) Logging::log(std::string("[Warn]") + A);
+#define Warn(A) Logging::log(std::string("[Warn]") + (A))
 
-#define Info(A) Logging::log(std::string("[Info]") + A);
+#define Info(A) Logging::log(std::string("[Info]") + (A))
 
 #ifndef CERESLOG_DEBUG
 #define Debug(A)                                          \
   Logging::log(std::string("[Debug][") + __FILE__ + ":" + \
-               std::to_string(__LINE__) + "]" + A);
+               std::to_string(__LINE__) + "]" + A)
 #else
-#define Debug(A) ;
+#define Debug(A)
 #endif

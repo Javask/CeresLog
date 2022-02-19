@@ -10,7 +10,7 @@ void LoggerTestBackend::write(const std::string& message) {
   *buffer += message;
 }
 
-void LoggerTestBackend::flush() { return; }
+void LoggerTestBackend::flush() { }
 
 std::unique_ptr<std::string> LoggerTestBackend::getLog() {
   auto oldBuffer = std::move(buffer);

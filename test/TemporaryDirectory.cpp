@@ -4,15 +4,16 @@
 #include <catch2/catch.hpp>
 #include <fstream>
 #include <cstring>
+#include <utility>
 
 namespace fs = std::filesystem;
 
 TemporaryDirectory::TemporaryDirectory() : TemporaryDirectory(".tmp") {}
 
-TemporaryDirectory::TemporaryDirectory(const std::string& fileExtension)
-    : extension_(fileExtension), path_(createTempDir()) {}
+TemporaryDirectory::TemporaryDirectory(std::string  fileExtension)
+    : extension_(std::move(fileExtension)), path_(createTempDir()) {}
 
-const fs::path TemporaryDirectory::createTempDir() {
+fs::path TemporaryDirectory::createTempDir() {
   const auto TempDir = fs::temp_directory_path();
   auto dir = fs::path(TempDir);
   while (exists(dir)) {
@@ -34,7 +35,7 @@ TemporaryDirectory::~TemporaryDirectory() {
  }
 
  std::filesystem::path TemporaryDirectory::createNewFileInDir(
-     std::string name) {
+     const std::string& name) {
    auto outPath = fs::path(path_).append(name + extension_);
    auto stream = std::ofstream(outPath);
    stream.close();

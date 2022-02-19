@@ -5,13 +5,13 @@
 class TemporaryDirectory {
  public:
   TemporaryDirectory();
-  TemporaryDirectory(const std::string& fileExtension);
+  explicit TemporaryDirectory(std::string  fileExtension);
   ~TemporaryDirectory();
   std::filesystem::path createTempFile();
-  std::filesystem::path createNewFileInDir(std::string name);
-  std::filesystem::path getPath() const;
+  std::filesystem::path createNewFileInDir(const std::string& name);
+  [[nodiscard]] std::filesystem::path getPath() const;
  private:
   std::string extension_;
   std::filesystem::path path_;
-  static const std::filesystem::path createTempDir();
+  static std::filesystem::path createTempDir();
 };

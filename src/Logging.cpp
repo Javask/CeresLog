@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "../include/CeresLog/Logging.h"
 #include "LogSingleton.h"
 
@@ -9,7 +11,7 @@ void Logging::fatal(const std::string& message) {
 void Logging::log(const std::string& message) { LogSingleton::log(message); }
 
 void Logging::setCustomBackend(std::shared_ptr<ILoggerBackend> newBackend) {
-  LogSingleton::setCustomBackend(newBackend);
+  LogSingleton::setCustomBackend(std::move(newBackend));
 }
 
 void Logging::setLogToConsole(bool val) { LogSingleton::setLogToConsole(val); }

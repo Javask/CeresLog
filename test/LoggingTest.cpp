@@ -8,7 +8,6 @@
 #include "../src/Discovery.h"
 #include <filesystem>
 #include <istream>
-#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -54,8 +53,6 @@ TEST_CASE("Test logging to file in Directory postfix", "[logging][discovery]") {
   auto finalPath = tempDir.getPath();
   finalPath.append("log");
 
-  auto test = tempDir.getPath();
-  test = test / "test2"/ ".."/ "log";
   REQUIRE(fs::exists(finalPath));
   std::vector<fs::path> Filenames;
   for (auto& LogFile : fs::directory_iterator(finalPath)) {
