@@ -1,6 +1,7 @@
 #include "RandomString.h"
 #include <random>
 #include <algorithm>
+#include <cstring>
 #include <catch2/catch.hpp>
 
 auto generateRandomString(const std::size_t len) -> std::string {

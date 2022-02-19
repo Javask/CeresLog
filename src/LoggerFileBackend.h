@@ -3,6 +3,7 @@
 #include <ostream>
 #include <fstream>
 #include <mutex>
+#include <filesystem>
 
 class LoggerFileBackend : public ILoggerBackend {
  public:
