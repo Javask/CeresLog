@@ -74,7 +74,7 @@ class Logging {
   static void flush();
 
   /// <summary>
-  /// Set the function to be called on a fatal log
+  /// Set a function to be called on a fatal log
   /// </summary>
   /// <param name="callback"> The callback to be called on fatal logs </param>
   static void setFatalCallback(std::function<void()> callback);
