@@ -2,6 +2,7 @@
 #include "ILoggerBackend.h"
 #include <string>
 #include <filesystem>
+#include <functional>
 
 /// <summary>
 /// Logging Interface class, exposes methods to log and to modify the logging behaviour
@@ -11,6 +12,12 @@ class Logging {
  private:
   Logging() = default;
   ~Logging() = default;
+
+#ifdef NDEBUG
+  static constexpr bool isDebugBuild = false;
+#else
+  static constexpr bool isDebugBuild = true;
+#endif
 
  public:
   /// <summary>
@@ -24,6 +31,13 @@ class Logging {
   /// <param name="message">Message string to log, Time/Date will be
   /// prefixed</param>
   static void log(const std::string& message);
+
+  /// <summary>
+  /// Logs the message as configured, if the program is a debug build
+  /// </summary>
+  /// <param name="message">Message string to log, Time/Date will be prefixed</param>
+  static void debug(const std::string& message);
+
   /// <summary>
   /// Sets a custom backend to use for logging, in addition to the file and console backends. Only one can be set at any time
   /// </summary>
@@ -58,6 +72,12 @@ class Logging {
   /// FLush all buffers
   /// </summary>
   static void flush();
+
+  /// <summary>
+  /// Set the function to be called on a fatal log
+  /// </summary>
+  /// <param name="callback"> The callback to be called on fatal logs </param>
+  static void setFatalCallback(std::function<void()> callback);
 };
 
 #define Fatal(A) Logging::fatal(std::string("[Fatal]") + (A))
@@ -68,10 +88,6 @@ class Logging {
 
 #define Info(A) Logging::log(std::string("[Info]") + (A))
 
-#ifndef CERESLOG_DEBUG
-#define Debug(A)                                          \
-  Logging::log(std::string("[Debug][") + __FILE__ + ":" + \
+#define Debug(A)  Logging::debug(std::string("[Debug][") + __FILE__ + ":" + \
                std::to_string(__LINE__) + "]" + A)
-#else
-#define Debug(A)
-#endif
+

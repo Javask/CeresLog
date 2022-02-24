@@ -4,7 +4,9 @@
 #include <string>
 #include <sstream>
 
-std::string Loggable::IntToHex(uintptr_t in) {
+
+
+std::string IntToHex(uintptr_t in) {
   std::stringstream stream;
   stream << std::hex << in;
   return stream.str();
@@ -16,24 +18,23 @@ Loggable::Loggable(std::string Name)
 void Loggable::changeName(std::string NewName) { name = std::move(NewName); }
 
 void Loggable::debug(const std::string& Message) const {
-#ifdef CERESLOG_DEBUG
-  LogSingleton::log("[DEBUG][" + id + "][" + name + "] " + Message + "\n");
-#endif
+  if(isDebugBuild)
+    LogSingleton::log("[Debug][" + id + "][" + name + "] " + Message + "\n");
 }
 
 void Loggable::info(const std::string& Message) const {
-  LogSingleton::log("[INFO][" + id + "][" + name + "] " + Message + "\n");
+  LogSingleton::log("[Info][" + id + "][" + name + "] " + Message + "\n");
 }
 
 void Loggable::warn(const std::string& Message) const {
-  LogSingleton::log("[WARN][" + id + "][" + name + "] " + Message + "\n");
+  LogSingleton::log("[Warn][" + id + "][" + name + "] " + Message + "\n");
 }
 
 void Loggable::error(const std::string& Message) const {
-  LogSingleton::log("[ERROR][" + id + "][" + name + "] " + Message + "\n");
+  LogSingleton::log("[Error][" + id + "][" + name + "] " + Message + "\n");
 }
 
 void Loggable::fatal(const std::string& Message) const {
-  LogSingleton::log("[FATAL][" + id + "][" + name + "] " + Message + "\n");
-  exit(1);
+  LogSingleton::log("[Fatal][" + id + "][" + name + "] " + Message + "\n");
+  LogSingleton::callFatalCallback();
 }

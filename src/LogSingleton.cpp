@@ -102,3 +102,17 @@ void LogSingleton::write_(const std::string& message) {
   if (logToFile && fileBackend_) fileBackend_->write(message);
   if (logToConsole && consoleBackend_) consoleBackend_->write(message);
 }
+
+
+void LogSingleton::setFatalCallback(std::function<void()> callback) {
+  auto inst = LogSingleton::Get();
+  auto Lock = std::unique_lock<std::mutex>(inst->callback_mutex);
+  inst->fatalCallback = callback;
+}
+
+
+void LogSingleton::callFatalCallback() {
+  auto inst = LogSingleton::Get();
+  auto Lock = std::unique_lock<std::mutex>(inst->callback_mutex);
+  if(inst->fatalCallback) inst->fatalCallback();
+}

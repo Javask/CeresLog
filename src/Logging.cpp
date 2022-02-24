@@ -4,8 +4,8 @@
 #include "LogSingleton.h"
 
 void Logging::fatal(const std::string& message) {
-  LogSingleton::log("[Fatal]" + message);
-  exit(1);
+  LogSingleton::log(message);
+  LogSingleton::callFatalCallback();
 }
 
 void Logging::log(const std::string& message) { LogSingleton::log(message); }
@@ -29,3 +29,13 @@ void Logging::deactivateLogToDir(bool reset) {
 }
 
 void Logging::flush() { LogSingleton::flush(); }
+
+void Logging::setFatalCallback(std::function<void()> callback) {
+  LogSingleton::setFatalCallback(std::move(callback));
+}
+
+void Logging::debug(const std::string& message) {
+  if(isDebugBuild){
+    LogSingleton::log(message);
+  }
+}

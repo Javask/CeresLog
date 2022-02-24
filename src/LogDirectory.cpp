@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 
 LogDirectory::LogDirectory(std::filesystem::path& path,
                            std::string extension, int fileLimit)
-    : path_(path), extension(std::move(extension)), fileLimit(fileLimit) {
+    : path_(path), fileLimit(fileLimit), extension(std::move(extension)) {
   if (!fs::exists(path)) {
     if (!fs::create_directories(path)) {
       std::cerr << "Failed to create logging directory "
@@ -39,7 +39,7 @@ void LogDirectory::enforceFileLimit() {
   }
   size_t Counter = 0;
   size_t Max = FilenameMap.size();
-  if (Max > fileLimit) {
+  if (Max > (size_t)fileLimit) {
     size_t ToGo = Max - fileLimit;
     for (const auto& LogFileKey : FilenameMap) {
       if (Counter == ToGo) {

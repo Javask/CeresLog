@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.21)
 
 project(CeresLog VERSION 1.0.0 LANGUAGES CXX)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions(-DCERESLOG_DEBUG)
-endif()
-
 if(UNIX)
     add_definitions(-DCERESLOG_PLATFORM_LINUX)
 elseif(WIN32)

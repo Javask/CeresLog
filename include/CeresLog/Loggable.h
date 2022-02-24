@@ -2,8 +2,6 @@
 #include <string>
 
 class Loggable {
-  friend class LogSystem;
-
  protected:
   explicit Loggable(std::string name);
   void changeName(std::string newName);
@@ -17,8 +15,11 @@ class Loggable {
   void fatal(const std::string& message) const;
 
  private:
-
-  static std::string IntToHex(uintptr_t in);
+#ifdef NDEBUG
+  static const bool isDebugBuild = false;
+#else
+  static const bool isDebugBuild = true;
+#endif
 
   std::string name;
   std::string id;

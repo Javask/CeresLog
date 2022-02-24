@@ -7,6 +7,7 @@
 #include <vector>
 #include "../src/Discovery.h"
 #include <filesystem>
+#include <atomic>
 #include <istream>
 
 namespace fs = std::filesystem;
@@ -14,13 +15,54 @@ namespace fs = std::filesystem;
 TEST_CASE("Test logging defines", "[logging]") {
   auto backend = LoggerTestBackend::getTestBackend();
   Logging::setCustomBackend(backend);
-  Error("Test");
-  auto log = backend->getLog();
-  auto fileRegex = std::regex(
-      R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Error\]Test)");
-  REQUIRE(log);
-  REQUIRE(std::regex_match(*log, fileRegex));
+  SECTION("Test Info define") {
+    Info("Test");
+    auto log = backend->getLog();
+    auto fileRegex = std::regex(
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Info\]Test)");
+    REQUIRE(log);
+    REQUIRE(std::regex_match(*log, fileRegex));
+  }
+  SECTION("Test Warn define") {
+    Warn("Test");
+    auto log = backend->getLog();
+    auto fileRegex = std::regex(
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Warn\]Test)");
+    REQUIRE(log);
+    REQUIRE(std::regex_match(*log, fileRegex));
+  }
+  SECTION("Test Error define") {
+    Error("Test");
+    auto log = backend->getLog();
+    auto fileRegex = std::regex(
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Error\]Test)");
+    REQUIRE(log);
+    REQUIRE(std::regex_match(*log, fileRegex));
+  }
+  SECTION("Test Debug define") {
+    Debug("Test");
+    auto log = backend->getLog();
+    auto fileRegex = std::regex(
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Debug\]\[.*:\d+\]Test)");
+    REQUIRE(log);
+    auto derefLog = *log;
+    REQUIRE(std::regex_match(derefLog, fileRegex));
+  }
+  SECTION("Test Fatal define") {
+    std::atomic_bool called = false;
+    auto callback = [&called](){called.store(true);};
+    Logging::setFatalCallback(callback);
+    Fatal("Test");
+    REQUIRE(called);
+    auto log = backend->getLog();
+    auto fileRegex = std::regex(
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Fatal\]Test)");
+    REQUIRE(log);
+    REQUIRE(std::regex_match(*log, fileRegex));
+  }
 }
+
+
 
 TEST_CASE("Test logging to file in temporary Directory", "[logging]") {
   auto backend = LoggerTestBackend::getTestBackend();

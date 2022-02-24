@@ -15,7 +15,7 @@ void LoggerTestBackend::flush() { }
 std::unique_ptr<std::string> LoggerTestBackend::getLog() {
   auto oldBuffer = std::move(buffer);
   buffer = std::make_unique<std::string>();
-  return std::move(oldBuffer);
+  return oldBuffer;
 }
 
 TEST_CASE("TestLogger logs correctly", "[logging][testlogger]") {
