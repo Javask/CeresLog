@@ -80,14 +80,14 @@ class Logging {
   static void setFatalCallback(std::function<void()> callback);
 };
 
-#define Fatal(A) Logging::fatal(std::string("[Fatal]") + (A))
+#define Fatal(A) Logging::fatal(std::string("[Fatal]") + (A) + std::string("\n"))
 
-#define Error(A) Logging::log(std::string("[Error]") + (A))
+#define Error(A) Logging::log(std::string("[Error]") + (A) + std::string("\n"))
 
-#define Warn(A) Logging::log(std::string("[Warn]") + (A))
+#define Warn(A) Logging::log(std::string("[Warn]") + (A) + std::string("\n"))
 
-#define Info(A) Logging::log(std::string("[Info]") + (A))
+#define Info(A) Logging::log(std::string("[Info]") + (A) + std::string("\n"))
 
 #define Debug(A)  Logging::debug(std::string("[Debug][") + __FILE__ + ":" + \
-               std::to_string(__LINE__) + "]" + A)
+               std::to_string(__LINE__) + "]" + A + std::string("\n"))
 

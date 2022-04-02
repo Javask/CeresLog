@@ -19,7 +19,7 @@ TEST_CASE("Test logging defines", "[logging]") {
     Info("Test");
     auto log = backend->getLog();
     auto fileRegex = std::regex(
-        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Info\]Test)");
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Info\]Test\n)");
     REQUIRE(log);
     REQUIRE(std::regex_match(*log, fileRegex));
   }
@@ -27,7 +27,7 @@ TEST_CASE("Test logging defines", "[logging]") {
     Warn("Test");
     auto log = backend->getLog();
     auto fileRegex = std::regex(
-        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Warn\]Test)");
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Warn\]Test\n)");
     REQUIRE(log);
     REQUIRE(std::regex_match(*log, fileRegex));
   }
@@ -35,7 +35,7 @@ TEST_CASE("Test logging defines", "[logging]") {
     Error("Test");
     auto log = backend->getLog();
     auto fileRegex = std::regex(
-        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Error\]Test)");
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Error\]Test\n)");
     REQUIRE(log);
     REQUIRE(std::regex_match(*log, fileRegex));
   }
@@ -43,7 +43,7 @@ TEST_CASE("Test logging defines", "[logging]") {
     Debug("Test");
     auto log = backend->getLog();
     auto fileRegex = std::regex(
-        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Debug\]\[.*:\d+\]Test)");
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Debug\]\[.*:\d+\]Test\n)");
     REQUIRE(log);
     auto derefLog = *log;
     REQUIRE(std::regex_match(derefLog, fileRegex));
@@ -56,7 +56,7 @@ TEST_CASE("Test logging defines", "[logging]") {
     REQUIRE(called);
     auto log = backend->getLog();
     auto fileRegex = std::regex(
-        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Fatal\]Test)");
+        R"(\[(\d)?\d:(\d)?\d:(\d)?\d\s(\d)?\d\.(\d)?\d\.\d\d\d\d\]\[Fatal\]Test\n)");
     REQUIRE(log);
     REQUIRE(std::regex_match(*log, fileRegex));
   }
