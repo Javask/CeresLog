@@ -8,6 +8,12 @@ set(CMAKE_EXE_LINKER_FLAGS_ASAN  "-fsanitize=address -g -Wall")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 
+if(MSVC)
+  set(CERES_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /EHsc")
+else()
+  set(CERES_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic)
+endif()
+
 if(UNIX)
     add_definitions(-DCERESLOG_PLATFORM_LINUX)
 elseif(WIN32)
@@ -20,7 +26,7 @@ endif()
 
 file(GLOB_RECURSE CERESLOG_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 add_library(CeresLog SHARED ${CERESLOG_SOURCE_FILES})
-set_target_properties(CeresLog PROPERTIES CXX_STANDARD 20)
+set_target_properties(CeresLog PROPERTIES CXX_STANDARD 20 COMPILE_OPTIONS "${CERES_CXX_FLAGS}")
 
 target_include_directories(CeresLog
     PUBLIC 
