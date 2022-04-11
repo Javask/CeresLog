@@ -2,14 +2,6 @@ cmake_minimum_required(VERSION 3.18)
 
 project(CeresLogTests)
 
-option(CERESLOG_BUILD_OWN_PACKAGES "Build all dependencies from scratch." OFF)
-if(NOT CERES_BUILD_OWN_PACKAGES)
-  set(CPM_USE_LOCAL_PACKAGES ON)
-else()
-  message(STATUS "Building CeresLog dependencies from scratch...")
-  set(CPM_USE_LOCAL_PACKAGES OFF)
-endif()
-
 include(${CMAKE_CURRENT_LIST_DIR}/../cmake/CPM.cmake)
 
 #add Catch2
