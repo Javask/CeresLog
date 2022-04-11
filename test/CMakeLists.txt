@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.18)
 
 project(CeresLogTests)
 
+option(CERESLOG_BUILD_OWN_PACKAGES "Build all dependencies from scratch." OFF)
+if(NOT CERES_BUILD_OWN_PACKAGES)
+  set(CPM_USE_LOCAL_PACKAGES ON)
+else()
+  message(STATUS "Building CeresLog dependencies from scratch...")
+  set(CPM_USE_LOCAL_PACKAGES OFF)
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/../cmake/CPM.cmake)
 
 #add Catch2
@@ -12,8 +20,8 @@ file(GLOB_RECURSE CERESLOG_TEST_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DI
 
 
 add_executable(CeresLogTests ${CERESLOG_TEST_FILES})
-target_link_libraries(CeresLogTests Catch2::Catch2 CeresLog::CeresLog)
-add_dependencies(CeresLogTests Catch2::Catch2 CeresLog::CeresLog)
+target_link_libraries(CeresLogTests $<TARGET_NAME_IF_EXISTS:Catch2::Catch2> CeresLog::CeresLog)
+add_dependencies(CeresLogTests CeresLog::CeresLog)
 set_target_properties(CeresLogTests PROPERTIES CXX_STANDARD 20 COMPILE_OPTIONS "${CERES_CXX_FLAGS}")
 
 
