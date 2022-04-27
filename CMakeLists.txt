@@ -49,6 +49,7 @@ add_library(CeresLog::CeresLog ALIAS CeresLog)
 
 option(CERESLOG_BUILD_TESTS "Build CeresLog Tests" ON)
 if(CERESLOG_BUILD_TESTS)
+  enable_testing()
   add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/")
 endif()
 

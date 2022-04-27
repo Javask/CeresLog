@@ -17,5 +17,4 @@ add_dependencies(CeresLogTests CeresLog::CeresLog)
 set_target_properties(CeresLogTests PROPERTIES CXX_STANDARD 20 COMPILE_OPTIONS "${CERES_CXX_FLAGS}")
 
 
-enable_testing()
-add_test(CeresLogTests CeresLogTests)
+add_test(CeresLogTests ${EXECUTABLE_OUTPUT_PATH}/CeresLogTests)
