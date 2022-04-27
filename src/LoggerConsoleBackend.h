@@ -2,7 +2,9 @@
 #include "../include/CeresLog/ILoggerBackend.h"
 #include <mutex>
 
-//Logger Backend logging to console
+namespace CeresLog {
+
+// Logger Backend logging to console
 class LoggerConsoleBackend : public ILoggerBackend {
  public:
   LoggerConsoleBackend() = default;
@@ -12,3 +14,5 @@ class LoggerConsoleBackend : public ILoggerBackend {
  private:
   std::mutex lock_;
 };
+
+}  // namespace CeresLog

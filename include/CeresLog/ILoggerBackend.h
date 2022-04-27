@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
 
-///<summary>
-///Replaceable Logger Backend, represents an output for the Logging System
+namespace CeresLog {
+///< summary>
+/// Replaceable Logger Backend, represents an output for the Logging System
 ///</summary>
 class ILoggerBackend {
  public:
@@ -20,3 +21,5 @@ class ILoggerBackend {
   /// </summary>
   virtual void flush() = 0;
 };
+
+}  // namespace CeresLog

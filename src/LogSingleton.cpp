@@ -3,6 +3,8 @@
 #include <utility>
 #include "Discovery.h"
 
+namespace CeresLog {
+
 void LogSingleton::flush_() {
   std::unique_lock<std::mutex> Lock(backend_mutex);
   if (customBackend_) customBackend_->flush();
@@ -50,8 +52,8 @@ void LogSingleton::activateLogToDir() {
   inst->logToFile = true;
   if (!inst->dir) {
     auto systemLogDir = LogDirectory::getSystemLogDir();
-    inst->dir = std::make_unique<LogDirectory>(systemLogDir,
-                                               std::string(inst->defaultExtension), inst->defaultLimit);
+    inst->dir = std::make_unique<LogDirectory>(
+        systemLogDir, std::string(inst->defaultExtension), inst->defaultLimit);
     inst->fileBackend_ = nullptr;
   }
   if (!inst->fileBackend_) {
@@ -71,11 +73,11 @@ void LogSingleton::activateLogToDir(const std::filesystem::path& path,
     outPath = Discovery::getExecutablePath().parent_path();
     outPath /= path;
   }
-  inst->dir = std::make_unique<LogDirectory>(outPath, fileExtension, logFileLimit);
+  inst->dir =
+      std::make_unique<LogDirectory>(outPath, fileExtension, logFileLimit);
   inst->fileBackend_ =
       std::make_unique<LoggerFileBackend>(inst->dir->createLogFile());
 }
-
 
 void LogSingleton::log_(const std::string& message) {
   time_t Time = time(nullptr);
@@ -103,16 +105,16 @@ void LogSingleton::write_(const std::string& message) {
   if (logToConsole && consoleBackend_) consoleBackend_->write(message);
 }
 
-
 void LogSingleton::setFatalCallback(std::function<void()> callback) {
   auto inst = LogSingleton::Get();
   auto Lock = std::unique_lock<std::mutex>(inst->callback_mutex);
   inst->fatalCallback = callback;
 }
 
-
 void LogSingleton::callFatalCallback() {
   auto inst = LogSingleton::Get();
   auto Lock = std::unique_lock<std::mutex>(inst->callback_mutex);
-  if(inst->fatalCallback) inst->fatalCallback();
+  if (inst->fatalCallback) inst->fatalCallback();
 }
+
+}  // namespace CeresLog

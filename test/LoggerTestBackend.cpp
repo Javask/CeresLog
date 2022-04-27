@@ -2,6 +2,7 @@
 #include "../src/LogSingleton.h"
 #include <catch2/catch.hpp>
 #include <regex>
+namespace CeresLog {
 
 LoggerTestBackend::LoggerTestBackend()
     : buffer(std::make_unique<std::string>()) {}
@@ -10,7 +11,7 @@ void LoggerTestBackend::write(const std::string& message) {
   *buffer += message;
 }
 
-void LoggerTestBackend::flush() { }
+void LoggerTestBackend::flush() {}
 
 std::unique_ptr<std::string> LoggerTestBackend::getLog() {
   auto oldBuffer = std::move(buffer);
@@ -45,3 +46,5 @@ TEST_CASE("TestLogger formats correctly", "[logging][testlogger]") {
 std::shared_ptr<LoggerTestBackend> LoggerTestBackend::getTestBackend() {
   return std::make_shared<LoggerTestBackend>();
 }
+
+}  // namespace CeresLog

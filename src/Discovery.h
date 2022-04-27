@@ -1,5 +1,8 @@
 #pragma once
 #include <filesystem>
+
+namespace CeresLog {
+
 class Discovery {
  private:
   Discovery() = default;
@@ -14,3 +17,5 @@ class Discovery {
   // Returns the Path to the running executable
   static auto getExecutablePath() -> std::filesystem::path;
 };
+
+}  // namespace CeresLog

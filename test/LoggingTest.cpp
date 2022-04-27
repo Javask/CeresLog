@@ -10,6 +10,7 @@
 #include <atomic>
 #include <istream>
 
+using namespace CeresLog;
 namespace fs = std::filesystem;
 
 TEST_CASE("Test logging defines", "[logging]") {
@@ -50,7 +51,7 @@ TEST_CASE("Test logging defines", "[logging]") {
   }
   SECTION("Test Fatal define") {
     std::atomic_bool called = false;
-    auto callback = [&called](){called.store(true);};
+    auto callback = [&called]() { called.store(true); };
     Logging::setFatalCallback(callback);
     Fatal("Test");
     REQUIRE(called);
@@ -62,8 +63,6 @@ TEST_CASE("Test logging defines", "[logging]") {
   }
 }
 
-
-
 TEST_CASE("Test logging to file in temporary Directory", "[logging]") {
   auto backend = LoggerTestBackend::getTestBackend();
   auto tempDir = TemporaryDirectory();
@@ -73,14 +72,13 @@ TEST_CASE("Test logging to file in temporary Directory", "[logging]") {
   for (auto& LogFile : fs::directory_iterator(tempDir.getPath())) {
     Filenames.push_back(LogFile.path());
   }
-  auto fileNameRegex = std::regex(
-      R"(Log_\d\d\d\d_\d?\d_\d?\d_\d?\d_\d?\d_\d?\d\.tmp)");
+  auto fileNameRegex =
+      std::regex(R"(Log_\d\d\d\d_\d?\d_\d?\d_\d?\d_\d?\d_\d?\d\.tmp)");
   REQUIRE(Filenames.size() == 1);
   auto filename = Filenames[0].filename().generic_string();
   REQUIRE(std::regex_match(filename, fileNameRegex));
   Logging::deactivateLogToDir(true);
 }
-
 
 TEST_CASE("Test logging to file in Directory postfix", "[logging][discovery]") {
   auto backend = LoggerTestBackend::getTestBackend();
@@ -91,7 +89,7 @@ TEST_CASE("Test logging to file in Directory postfix", "[logging][discovery]") {
   Discovery::overrideExecutablePath(tempDir2);
   Logging::setCustomBackend(backend);
 
-  Logging::activateLogToDir(fs::path("test2")/".."/"log", 0, ".tmp");
+  Logging::activateLogToDir(fs::path("test2") / ".." / "log", 0, ".tmp");
   auto finalPath = tempDir.getPath();
   finalPath.append("log");
 
@@ -122,12 +120,13 @@ TEST_CASE("Test successful logging to file", "[logging]") {
   Error("Testlog");
   Logging::flush();
   Logging::deactivateLogToDir(false);
-  std::ifstream filestream = std::ifstream(Filenames[0].generic_string(),std::ios::in|std::ios::ate);
+  std::ifstream filestream = std::ifstream(Filenames[0].generic_string(),
+                                           std::ios::in | std::ios::ate);
   REQUIRE(filestream.is_open());
   auto endPos = filestream.tellg();
   filestream.seekg(std::ios::beg);
   auto size = endPos - filestream.tellg();
-  std::vector<char> data = std::vector<char>(size+1);
+  std::vector<char> data = std::vector<char>(size + 1);
   filestream.read(data.data(), size);
   filestream.close();
   std::string readData = std::string(data.data());
@@ -137,7 +136,7 @@ TEST_CASE("Test successful logging to file", "[logging]") {
   Logging::flush();
   Logging::deactivateLogToDir(false);
   filestream = std::ifstream(Filenames[0].generic_string(),
-                                           std::ios::in | std::ios::ate);
+                             std::ios::in | std::ios::ate);
   REQUIRE(filestream.is_open());
   endPos = filestream.tellg();
   filestream.seekg(std::ios::beg);

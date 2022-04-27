@@ -3,6 +3,8 @@
 #include "../include/CeresLog/Logging.h"
 #include "LogSingleton.h"
 
+namespace CeresLog {
+
 void Logging::fatal(const std::string& message) {
   LogSingleton::log(message);
   LogSingleton::callFatalCallback();
@@ -35,7 +37,9 @@ void Logging::setFatalCallback(std::function<void()> callback) {
 }
 
 void Logging::debug(const std::string& message) {
-  if(isDebugBuild){
+  if (isDebugBuild) {
     LogSingleton::log(message);
   }
 }
+
+}  // namespace CeresLog

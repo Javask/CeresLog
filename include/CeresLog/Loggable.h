@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 
+namespace CeresLog {
 /// <summary>
-/// Class that can be inherited from to provide automatical named logging in an object with a unique identifier per object
+/// Class that can be inherited from to provide automatical named logging in an
+/// object with a unique identifier per object
 /// </summary>
 class Loggable {
  protected:
@@ -20,7 +22,8 @@ class Loggable {
  public:
   virtual ~Loggable() = default;
   /// <summary>
-  /// Log a message with the name and id prepended, only if this is a debug build
+  /// Log a message with the name and id prepended, only if this is a debug
+  /// build
   /// </summary>
   /// <param name="message">the message to log</param>
   void debug(const std::string& message) const;
@@ -44,8 +47,8 @@ class Loggable {
   /// <param name="message">the message to log</param>
   void error(const std::string& message) const;
   /// <summary>
-  /// Log a message with the name and id prepended with log level fatal, calling the fatal callback, if set
-  /// build
+  /// Log a message with the name and id prepended with log level fatal, calling
+  /// the fatal callback, if set build
   /// </summary>
   /// <param name="message">the message to log</param>
   void fatal(const std::string& message) const;
@@ -60,3 +63,5 @@ class Loggable {
   std::string name;
   std::string id;
 };
+
+}  // namespace CeresLog

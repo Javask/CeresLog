@@ -5,6 +5,8 @@
 #include <mutex>
 #include <filesystem>
 
+namespace CeresLog {
+
 class LoggerFileBackend : public ILoggerBackend {
  public:
   explicit LoggerFileBackend(const std::filesystem::path& file);
@@ -18,3 +20,5 @@ class LoggerFileBackend : public ILoggerBackend {
   std::ofstream file_;
   std::mutex lock_;
 };
+
+}  // namespace CeresLog

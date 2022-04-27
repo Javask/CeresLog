@@ -8,8 +8,10 @@
 
 namespace fs = std::filesystem;
 
-LogDirectory::LogDirectory(std::filesystem::path& path,
-                           std::string extension, int fileLimit)
+namespace CeresLog {
+
+LogDirectory::LogDirectory(std::filesystem::path& path, std::string extension,
+                           int fileLimit)
     : path_(path), fileLimit(fileLimit), extension(std::move(extension)) {
   if (!fs::exists(path)) {
     if (!fs::create_directories(path)) {
@@ -85,9 +87,8 @@ std::string LogDirectory::getLogFileName() {
   Filename += std::to_string(Now.tm_hour) + "_";
   Filename += std::to_string(Now.tm_min) + "_";
   Filename += std::to_string(Now.tm_sec);
-  return Filename+extension;
+  return Filename + extension;
 }
-
 
 std::filesystem::path LogDirectory::createLogFile() {
   auto outPath = fs::path(path_);
@@ -97,3 +98,5 @@ std::filesystem::path LogDirectory::createLogFile() {
   enforceFileLimit();
   return outPath;
 }
+
+}  // namespace CeresLog

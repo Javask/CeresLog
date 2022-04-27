@@ -2,6 +2,7 @@
 #include "../include/CeresLog/ILoggerBackend.h"
 #include <memory>
 
+namespace CeresLog {
 class LoggerTestBackend : public ILoggerBackend {
  public:
   LoggerTestBackend();
@@ -13,3 +14,4 @@ class LoggerTestBackend : public ILoggerBackend {
  private:
   std::unique_ptr<std::string> buffer;
 };
+}  // namespace CeresLog

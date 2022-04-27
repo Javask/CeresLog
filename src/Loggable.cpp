@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-
+namespace CeresLog {
 
 std::string IntToHex(uintptr_t in) {
   std::stringstream stream;
@@ -18,7 +18,7 @@ Loggable::Loggable(std::string Name)
 void Loggable::changeName(std::string NewName) { name = std::move(NewName); }
 
 void Loggable::debug(const std::string& Message) const {
-  if(isDebugBuild)
+  if (isDebugBuild)
     LogSingleton::log("[Debug][" + id + "][" + name + "] " + Message + "\n");
 }
 
@@ -38,3 +38,5 @@ void Loggable::fatal(const std::string& Message) const {
   LogSingleton::log("[Fatal][" + id + "][" + name + "] " + Message + "\n");
   LogSingleton::callFatalCallback();
 }
+
+}  // namespace CeresLog

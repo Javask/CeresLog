@@ -8,6 +8,8 @@
 #include <vector>
 #include <iostream>
 
+namespace CeresLog {
+
 bool Discovery::isSet = false;
 
 std::filesystem::path Discovery::executablePath = std::filesystem::path();
@@ -23,7 +25,7 @@ std::filesystem::path Discovery::getExecutablePath() {
   if (isSet) return executablePath;
 
 #ifdef CERESLOG_PLATFORM_WINDOWS
-  //Use Windows API to find Current file
+  // Use Windows API to find Current file
   std::vector<char> FileName = std::vector<char>(128);
   while (GetModuleFileNameA(nullptr, FileName.data(), (DWORD)FileName.size()) ==
          (DWORD)FileName.size()) {
@@ -43,3 +45,5 @@ std::filesystem::path Discovery::getExecutablePath() {
   return std::string(FileName, (count > 0) ? count : 0);
 #endif
 }
+
+}  // namespace CeresLog
