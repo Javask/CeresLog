@@ -7,13 +7,13 @@
 #include "LoggerConsoleBackend.h"
 #include "LoggerFileBackend.h"
 #include "LogDirectory.h"
-#include "Singleton.h"
+#include <Utilities/Singleton.h>
 
 namespace CeresLog {
 
-class LogSingleton : public Singleton<LogSingleton> {
-  friend class Singleton<LogSingleton>;
-  friend class Destroyer<LogSingleton>;
+class LogSingleton : public Utilities::Singleton<LogSingleton> {
+  friend class Utilities::Singleton<LogSingleton>;
+  friend class Utilities::Destroyer<LogSingleton>;
 
  protected:
   LogSingleton() = default;

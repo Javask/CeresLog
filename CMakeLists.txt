@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.18)
 
 project(CeresLog VERSION 1.0.0 LANGUAGES CXX)
 
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/CPM.cmake)
+
 option(CERESLOG_BUILD_OWN_PACKAGES "Build all dependencies from scratch." OFF)
 if(NOT CERESLOG_BUILD_OWN_PACKAGES)
   set(CPM_USE_LOCAL_PACKAGES ON)
@@ -20,7 +22,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
 if(MSVC)
   set(CERES_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /EHsc")
 else()
-  set(CERES_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic)
+  set(CERES_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -fPIC)
 endif()
 
 if(UNIX)
@@ -33,10 +35,17 @@ elseif(WIN32)
     endif()
 endif()
 
+
+CPMAddPackage(NAME Utilities 
+              GIT_TAG v1.0.0-alpha4
+              GITHUB_REPOSITORY Javask/Utilities
+              OPTIONS
+                "UTILITIES_BUILD_TESTS OFF")
+
 file(GLOB_RECURSE CERESLOG_SOURCE_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 add_library(CeresLog SHARED ${CERESLOG_SOURCE_FILES})
 set_target_properties(CeresLog PROPERTIES CXX_STANDARD 20 COMPILE_OPTIONS "${CERES_CXX_FLAGS}")
-
+target_link_libraries(CeresLog Utilities::Utilities)
 target_include_directories(CeresLog
     PUBLIC 
         $<INSTALL_INTERFACE:include>    
