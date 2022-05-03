@@ -1,5 +1,6 @@
 #include "TemporaryDirectory.h"
-#include "RandomString.h"
+#include <Utilities/FileUtils.h>
+#include <Utilities/StringUtils.h>
 #include <string>
 #include <catch2/catch.hpp>
 #include <fstream>
@@ -10,39 +11,28 @@ namespace fs = std::filesystem;
 
 TemporaryDirectory::TemporaryDirectory() : TemporaryDirectory(".tmp") {}
 
-TemporaryDirectory::TemporaryDirectory(std::string  fileExtension)
-    : extension_(std::move(fileExtension)), path_(createTempDir()) {}
+TemporaryDirectory::TemporaryDirectory(std::string fileExtension)
+    : extension_(std::move(fileExtension)), path_(Utilities::createTempDir()) {}
 
-fs::path TemporaryDirectory::createTempDir() {
-  const auto TempDir = fs::temp_directory_path();
-  auto dir = fs::path(TempDir);
-  while (exists(dir)) {
-    dir = fs::path(TempDir).append(generateRandomString(8));
-  }
-  REQUIRE(create_directory(dir));
-  return dir;
-}
+TemporaryDirectory::~TemporaryDirectory() { remove_all(path_); }
 
-TemporaryDirectory::~TemporaryDirectory() {
-  remove_all(path_);
-}
-
- std::filesystem::path TemporaryDirectory::createTempFile() {
-  auto outPath = fs::path(path_).append(generateRandomString(8) + extension_);
-   auto stream = std::ofstream(outPath);
+std::filesystem::path TemporaryDirectory::createTempFile() {
+  auto outPath =
+      fs::path(path_).append(Utilities::generateRandomString(8) + extension_);
+  auto stream = std::ofstream(outPath);
   stream.close();
   return outPath;
- }
+}
 
- std::filesystem::path TemporaryDirectory::createNewFileInDir(
-     const std::string& name) {
-   auto outPath = fs::path(path_).append(name + extension_);
-   auto stream = std::ofstream(outPath);
-   stream.close();
-   return outPath;
- }
+std::filesystem::path TemporaryDirectory::createNewFileInDir(
+    const std::string& name) {
+  auto outPath = fs::path(path_).append(name + extension_);
+  auto stream = std::ofstream(outPath);
+  stream.close();
+  return outPath;
+}
 
- std::filesystem::path TemporaryDirectory::getPath() const { return path_; }
+std::filesystem::path TemporaryDirectory::getPath() const { return path_; }
 
 TEST_CASE("Temporary Directory created", "[utility][temporarydir]") {
   {

@@ -14,5 +14,4 @@ class TemporaryDirectory {
  private:
   std::string extension_;
   std::filesystem::path path_;
-  static std::filesystem::path createTempDir();
 };
